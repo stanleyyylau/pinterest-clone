@@ -2,18 +2,44 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path')
+var expressSession = require('express-session');
+var passport = require('passport');
+var cookieParser = require('cookie-parser');
+var TwitterStrategy = require('passport-twitter').Strategy;
 
+// the process.env values are set in .env
 const config = require('./config/config')();
 const apiController = require('./controllers/apiController');
 const middleware = require('./middleware/authentication');
 
 const app = express();
+
 // Global middleware
-app.use(bodyParser.json());
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: process.env.TWITTER_CALLBACK_URL,
+},
+  function (token, tokenSecret, profile, done) {
+    return done(null, profile);
+  }));
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname + "/../client/build")));
 
+// Authentication middleware
+app.use(expressSession({ secret: 'watchingferries', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 // CORS support
-app.use('/', function(req, res, next) {
+app.use('/', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With, x-auth, Content-Type, x-access-token");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH");
@@ -29,28 +55,16 @@ app.use('/', function(req, res, next) {
 });
 
 // API routes here
-app.get('/api/allbooks', apiController.allBooks)
-app.post('/api/searchbook', apiController.searchBook)
-app.get('/api/book/:id', apiController.getOneBook)
-
-app.post('/api/register', middleware.loggedOut, apiController.register)
-app.post('/api/login', middleware.loggedOut, apiController.login)
-app.get('/api/logout', middleware.loggedIn, apiController.logout)
-app.get('/api/mybooks', middleware.loggedIn, apiController.getAllMyBooks)
-app.post('/api/trade', middleware.loggedIn, apiController.tradeBook)
-
-app.get('/api/mypropose', middleware.loggedIn, apiController.myPropose)
-app.get('/api/myreceive', middleware.loggedIn, apiController.myReceive)
-
-app.post('/api/tradecheck', middleware.loggedIn, apiController.tradeCheck)
-app.post('/api/tradeconfirm', middleware.loggedIn, apiController.tradeConfirm)
-app.post('/api/tradereject', middleware.loggedIn, apiController.tradeReject)
-app.post('/api/tradecancel', middleware.loggedIn, apiController.tradeCancel)
-
-app.get('/api/profile', middleware.loggedIn, apiController.getProfile)
-app.post('/api/profile', middleware.loggedIn, apiController.updateProfile)
-
-app.post('/api/addbook', middleware.loggedIn, apiController.addBook)
+app.get('/api/test', function (req, res) {
+  res.sendFile(__dirname + '/index.html');
+})
+app.get('/api/twitter/login', passport.authenticate('twitter', { session: false }) )
+app.get('/api/twitter/login/return', passport.authenticate('twitter', { session: false }),
+  function (req, res) {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.send('login success!')
+  })
 
 // TODO: Swap for server-side universal react routing
 app.get("/*", (req, res, next) => {

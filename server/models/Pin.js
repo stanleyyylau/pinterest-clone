@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const BookSchema = new mongoose.Schema({
+const PinSchema = new mongoose.Schema({
   title: String,
   author: String,
   pages: String,
@@ -14,6 +14,6 @@ const BookSchema = new mongoose.Schema({
   }
 })
 
-const Book = mongoose.model('Book', BookSchema);
+const Pin = mongoose.model('Pin', PinSchema);
 
-module.exports = Book;
+module.exportsPin;

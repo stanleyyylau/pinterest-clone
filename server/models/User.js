@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require("bcrypt");
 
-const Book = require('./Book');
+const Pin = require('./Pin');
 var Schema = mongoose.Schema;
 
 var UserSchema = new mongoose.Schema({

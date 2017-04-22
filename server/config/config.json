@@ -1,18 +1,24 @@
 {
   "test": {
     "PORT": 4545,
-    "MONGODB_URI": "mongodb://localhost:27017/book_trade_test",
+    "MONGODB_URI": "mongodb://localhost:27017/pinterest_clone_test",
     "USERNAME": "Stanley",
     "PASSWORD": "stanleyisawesome!",
     "SESSION_SECRET": "poijfsasdffawefa35jpgffrdpoij3",
-    "JWT_SECRET": "SOMERANDONSTUFFHERETOMAKEITRANDOM"
+    "JWT_SECRET": "SOMERANDONSTUFFHERETOMAKEITRANDOM",
+    "TWITTER_CONSUMER_KEY": "fSpOrooyU4xWwoPZcpc7hhmGE",
+    "TWITTER_CONSUMER_SECRET": "qheEzhG4FrGAroXMexcNUU5MzimUBg6qp2ZClsaD0ITKYy9RgK",
+    "TWITTER_CALLBACK_URL": "/api/twitter/login/return"
   },
   "development": {
     "PORT": 4545,
-    "MONGODB_URI": "mongodb://localhost:27017/book_trade",
+    "MONGODB_URI": "mongodb://localhost:27017/pinterest_clone",
     "USERNAME": "Stanley",
     "PASSWORD": "stanleyisawesome!",
     "SESSION_SECRET": "poafeawergfer34oi234oij234oij4",
-    "JWT_SECRET": "SOMERANDONSTUFFHERETOMAKEITRANDOM"
+    "JWT_SECRET": "SOMERANDONSTUFFHERETOMAKEITRANDOM",
+    "TWITTER_CONSUMER_KEY": "fSpOrooyU4xWwoPZcpc7hhmGE",
+    "TWITTER_CONSUMER_SECRET": "qheEzhG4FrGAroXMexcNUU5MzimUBg6qp2ZClsaD0ITKYy9RgK",
+    "TWITTER_CALLBACK_URL": "/api/twitter/login/return"
   }
 }
