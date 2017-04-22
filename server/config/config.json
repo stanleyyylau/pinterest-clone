@@ -1,0 +1,18 @@
+{
+  "test": {
+    "PORT": 4545,
+    "MONGODB_URI": "mongodb://localhost:27017/book_trade_test",
+    "USERNAME": "Stanley",
+    "PASSWORD": "stanleyisawesome!",
+    "SESSION_SECRET": "poijfsasdffawefa35jpgffrdpoij3",
+    "JWT_SECRET": "SOMERANDONSTUFFHERETOMAKEITRANDOM"
+  },
+  "development": {
+    "PORT": 4545,
+    "MONGODB_URI": "mongodb://localhost:27017/book_trade",
+    "USERNAME": "Stanley",
+    "PASSWORD": "stanleyisawesome!",
+    "SESSION_SECRET": "poafeawergfer34oi234oij234oij4",
+    "JWT_SECRET": "SOMERANDONSTUFFHERETOMAKEITRANDOM"
+  }
+}
