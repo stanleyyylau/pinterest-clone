@@ -21,6 +21,7 @@ passport.use(new TwitterStrategy({
   callbackURL: process.env.TWITTER_CALLBACK_URL,
 },
   function (token, tokenSecret, profile, done) {
+    console.log(token, tokenSecret, profile)
     return done(null, profile);
   }));
 passport.serializeUser(function (user, done) {
@@ -79,10 +80,10 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.log('Error handling begin....')
-  console.log(err.errorMsg)
+  console.log(err)
   res.status(500).json({
     errorCode: 1,
-    errorMsg: err.message
+    errorMsg: err
   })
 })
 
