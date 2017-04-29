@@ -130,3 +130,19 @@ a.btn.btn-default.navbar-btn {
     justify-content: center;
     align-items: center;
 }
+
+form.add-pic {
+    padding: 5px;
+}
+
+.add-pic .form-group {
+    margin-bottom: 5px;
+}
+
+.add-pic button.btn.btn-default {
+    margin-top: 5px;
+}
+
+.like-box:hover, .like-box:active {
+    text-decoration: none;
+}

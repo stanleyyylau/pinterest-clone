@@ -59,7 +59,11 @@ app.use('/', function (req, res, next) {
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-  res.render('index', { title: 'Hey', message: 'Hello there!' })
+  res.render('index', { 
+          title: 'Hey', 
+          message: 'Hello there!',
+          login: true 
+        })
 })
 
 // API routes here

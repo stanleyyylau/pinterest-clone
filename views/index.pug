@@ -1,6 +1,6 @@
 html
   head
-    title= title
+    title Pinterest Clone
     link(rel="stylesheet", href="/assets/css/main.css")
     link(rel="stylesheet", href="/assets/css/bootstrap.min.css")
     link(rel="stylesheet", href="/assets/css/font-awesome.min.css")
@@ -23,24 +23,17 @@ html
                 span.sr-only (current)
             if login
               li
-                a(href='#') Link
+                a(href='#') My Pics
               li.dropdown
-                a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                  | Dropdown 
+                a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') Add a Pic 
                   span.caret
                 ul.dropdown-menu
-                  li
-                    a(href='#') Action
-                  li
-                    a(href='#') Another action
-                  li
-                    a(href='#') Something else here
-                  li.divider(role='separator')
-                  li
-                    a(href='#') Separated link
-                  li.divider(role='separator')
-                  li
-                    a(href='#') One more separated link
+                  form.add-pic
+                    .form-group
+                      input#InputUrl.form-control(type='text', placeholder='Pic Url...')
+                    .form-group
+                      input#InputDes.form-control(type='text', placeholder='Pic Description...')
+                    button.btn.btn-primary.btn-block(type='submit') Confirm                  
           if !login
             ul.nav.navbar-nav.navbar-right
               li
@@ -65,10 +58,6 @@ html
           a.like-box(href="#")
             i(class="fa fa-star" aria-hidden="true")
             span 1      
-      .grid-item some tunny test heresome tunny test heresome tunny test here
-      .grid-item some tunny test heresome tunny test heresome tunny test here
-      .grid-item some tunny test heresome tunny test heresome tunny test here
-      .grid-item some tunny test heresome tunny test heresome tunny test here
       .grid-item some tunny test heresome tunny test heresome tunny test here
       .grid-item some tunny test heresome tunny test heresome tunny test here
       .grid-item some tunny test heresome tunny test heresome tunny test here
