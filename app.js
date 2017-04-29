@@ -13,6 +13,7 @@ const apiController = require('./controllers/apiController');
 const middleware = require('./middleware/authentication');
 
 const app = express();
+app.use('/assets', express.static('/views/assets'));
 
 // Global middleware
 passport.use(new TwitterStrategy({
@@ -54,6 +55,12 @@ app.use('/', function (req, res, next) {
     next();
   }
 });
+
+app.set('view engine', 'pug');
+
+app.get('/', function (req, res) {
+  res.render('index', { title: 'Hey', message: 'Hello there!' })
+})
 
 // API routes here
 app.get('/api/test', function (req, res) {
