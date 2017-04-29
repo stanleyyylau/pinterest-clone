@@ -13,7 +13,7 @@ const apiController = require('./controllers/apiController');
 const middleware = require('./middleware/authentication');
 
 const app = express();
-app.use('/assets', express.static('/views/assets'));
+app.use('/assets', express.static('views/assets'));
 
 // Global middleware
 passport.use(new TwitterStrategy({
