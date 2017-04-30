@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const User = require('./User');
+const bcrypt = require("bcrypt");
 
-const PinSchema = new mongoose.Schema({
-  pinUrl: String,
-  pinDes: String,
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  }
+const Pin = require('./Pin');
+var Schema = mongoose.Schema;
+
+var UserSchema = new mongoose.Schema({
+  twitterId: String,
+  avatarPhone: String,
+  Pins: [{type: Schema.Types.ObjectId, ref: 'Pin'}]
 })
 
-const Pin = mongoose.model('Pin', PinSchema);
+var User = mongoose.model('User', UserSchema);
 
-module.exports = Pin;
+module.exports = User;
+

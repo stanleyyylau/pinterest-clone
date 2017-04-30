@@ -80,19 +80,68 @@ app.use('/', function (req, res, next) {
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-  if(req.user && req.user.twitterId){
-    res.render('index', { 
+  // Pull all pins from db
+  Pin.find({}).populate('owner').then((pins)=>{
+    console.log(pins)
+    
+    if(req.user && req.user.twitterId){
+      res.render('index', { 
+            title: 'Hey', 
+            message: 'Hello there!',
+            login: true,
+            pins: pins,
+            currentUserId: req.user._id
+          })
+    } else {
+      res.render('index', { 
           title: 'Hey', 
           message: 'Hello there!',
-          login: true 
+          login: false,
+          pins: pins
         })
-  } else {
-    res.render('index', { 
-        title: 'Hey', 
-        message: 'Hello there!',
-        login: false 
+    }
+  })
+  
+  
+})
+
+app.post('/delete', function(req, res){
+  // First remove it from user array
+  var newPins = []
+  User.findById(req.user._id).then((user)=>{
+    user.Pins.forEach(function(val, index){
+      if(val!==req.body.pinId){
+        newPins.push(val)
+      }
+    })
+    
+    user.Pins = newPins;
+    return user.save()
+  }).then((user)=>{
+    // Now remove the pin from PIN collection
+    return Pin.findByIdAndRemove(req.body.pinId)
+  }).then((pin)=>{
+    res.redirect(`/user/${req.user._id}`)
+  })
+})
+
+app.get('/user/:id', function(req, res){
+  Pin.find({owner:req.params.id}).populate('owner').then(pins=>{
+    
+    if(req.user && req.user.twitterId){
+      // if user is login
+      res.render('mypics', {
+        login: true,
+        pins: pins
       })
-  }
+    } else {
+      res.render('index', {
+        login: false,
+        pins: pins
+      })
+    }
+    
+  })
 })
 
 app.get('/logout', function(req, res){

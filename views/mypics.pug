@@ -13,50 +13,70 @@ block bodyContent
           span.icon-bar
           span.icon-bar
           span.icon-bar
-        a.navbar-brand(href='#') Pinterest
+        a.navbar-brand(href='/') Pinterest
       //- Collect the nav links, forms, and other content for toggling
       #bs-example-navbar-collapse-1.collapse.navbar-collapse
         ul.nav.navbar-nav
           li
-            a(href='#') All 
+            a(href='/') All 
               span.sr-only (current)
           if login
             li.active
-              a(href='#') My Pics
+              a(href=`/user/${currentUserId}`) My Pics
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false') Add a Pic 
                 span.caret
               ul.dropdown-menu
-                form.add-pic
+                form.add-pic(method="post", action="/addpin")
                   .form-group
-                    input#InputUrl.form-control(type='text', placeholder='Pic Url...')
+                    input#InputUrl.form-control(type='text', name="pinUrl" placeholder='Pic Url...')
                   .form-group
-                    input#InputDes.form-control(type='text', placeholder='Pic Description...')
+                    input#InputDes.form-control(type='text', name="pinDes" placeholder='Pic Description...')
                   button.btn.btn-primary.btn-block(type='submit') Confirm                  
         if !login
           ul.nav.navbar-nav.navbar-right
             li
-              a(href='#' class="btn btn-default navbar-btn") 
+              a(href='/api/twitter/login' class="btn btn-default navbar-btn") 
                 i(class="fa fa-twitter-square" aria-hidden="true")
                 span Login
         else
           ul.nav.navbar-nav.navbar-right
             li
-              a(href='#' class="btn btn-default navbar-btn") 
+              a(href='/logout' class="btn btn-default navbar-btn") 
                 span Logout                    
   .grid
-    .grid-item
-      .main-img
-        img(src="http://i.imgur.com/6Lo8oun.jpgdd")
-        p this is the image descrition
-      .info-box
-        .avatar
-          a(href="#")
-            img(src="https://pbs.twimg.com/profile_images/749651521772544000/sQecFIxG_normal.jpg")
-        a.like-box(href="#")
-          i(class="fa fa-star" aria-hidden="true")
-          span 1      
+    each val in pins
+      .grid-item
+        .main-img
+          img(src=`${val.pinUrl}`)
+          p #{val.pinDes}
+        .info-box
+          .avatar
+            a(href=`/user/${val.owner._id}`)
+              img(src=`${val.owner.avatarPhone}`)
+          
+          a.like-box(href="#" data-pinId=`${val._id}`)
+            i(class="fa fa-star" aria-hidden="true")
+            span ×    
 
 block footer
   script.
-   var test = true;      
+   var test = true;
+   $('.like-box').click(function(e){
+      e.preventDefault()
+      var pinId = $(this).data('pinid')
+      console.log(pinId)
+
+      $.ajax({
+        type: "POST",
+        url: "/delete",
+        data: {
+          pinId: pinId
+        },
+        success: function(data){
+          console.log('done')
+          location.reload();
+        }
+      });
+    })
+   
