@@ -11,6 +11,7 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 const config = require('./config/config')();
 const apiController = require('./controllers/apiController');
 const middleware = require('./middleware/authentication');
+const User = require('./models/User.js')
 
 const app = express();
 app.use('/assets', express.static('views/assets'));
@@ -22,14 +23,33 @@ passport.use(new TwitterStrategy({
   callbackURL: process.env.TWITTER_CALLBACK_URL,
 },
   function (token, tokenSecret, profile, done) {
-    console.log(token, tokenSecret, profile)
-    return done(null, profile);
+    // Save this user to DB if this is a first time visit user
+    User.find({twitterId: profile.id}).then((user)=>{
+      if(user.length == 0){
+        var newUser = new User({
+          twitterId: profile.id,
+          avatarPhone: profile.photos[0].value
+        })
+        newUser.save()
+      }
+    }).catch((err)=>{
+      var newUser = new User({
+        twitterId: profile.id,
+        avatarPhone: profile.photos[0].value
+      })
+      newUser.save()
+    })
+    
+    return done(null, { id: profile.id, photos: profile.photos } );
   }));
 passport.serializeUser(function (user, done) {
   done(null, user);
 });
 passport.deserializeUser(function (obj, done) {
-  done(null, obj);
+  User.find({twitterId: obj.id}).then((user)=>{
+    console.log(user)
+    done(null, user[0]);
+  })
 });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -59,24 +79,32 @@ app.use('/', function (req, res, next) {
 app.set('view engine', 'pug');
 
 app.get('/', function (req, res) {
-  res.render('index', { 
+  if(req.user && req.user.twitterId){
+    res.render('index', { 
           title: 'Hey', 
           message: 'Hello there!',
-          login: false 
+          login: true 
         })
+  } else {
+    res.render('index', { 
+        title: 'Hey', 
+        message: 'Hello there!',
+        login: false 
+      })
+  }
 })
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 // API routes here
 app.get('/api/test', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 })
-app.get('/api/twitter/login', passport.authenticate('twitter', { session: false }) )
-app.get('/api/twitter/login/return', passport.authenticate('twitter', { session: false }),
-  function (req, res) {
-    // If this function gets called, authentication was successful.
-    // `req.user` contains the authenticated user.
-    res.send('login success!')
-  })
+app.get('/api/twitter/login', passport.authenticate('twitter', { session: true }) )
+app.get('/api/twitter/login/return', passport.authenticate('twitter', { successRedirect: '/', failureRedirect: '/' }) )
 
 // TODO: Swap for server-side universal react routing
 app.get("/*", (req, res, next) => {

@@ -6,7 +6,7 @@ So I can easly this this on gomix, doing this because there's a bug with twitter
 sometime it doesnt work with local machine, has to put the code on production server
 
 ## V2
-User should be able to login via twitter
+User should be able to login via twitter and logout
 
 ## V3
-User should be able to see his info after login
+User should be about to post new pin
