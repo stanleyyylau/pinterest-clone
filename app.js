@@ -12,6 +12,7 @@ const config = require('./config/config')();
 const apiController = require('./controllers/apiController');
 const middleware = require('./middleware/authentication');
 const User = require('./models/User.js')
+const Pin = require('./models/Pin.js')
 
 const app = express();
 app.use('/assets', express.static('views/assets'));
@@ -97,6 +98,26 @@ app.get('/', function (req, res) {
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
+});
+
+app.post('/addpin', function(req, res){
+  // Crate a new pin
+  var newPin = new Pin({
+    pinUrl: req.body.pinUrl,
+    pinDes: req.body.pinDes,
+    owner: req.user._id
+  })
+  
+  User.findById(req.user.id).then((user)=>{
+    user.Pins.push(newPin)
+    Promise.all([newPin.save(), user.save()]).then(result=>{
+      console.log(result)
+      res.redirect('/');
+    })
+  })
+  
+  
+  
 });
 
 // API routes here
